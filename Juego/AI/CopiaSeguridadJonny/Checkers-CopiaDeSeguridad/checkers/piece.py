@@ -20,7 +20,7 @@ class Piece:
 
     def make_king(self):
         self.king = True
-    
+
     def draw(self, win):
         radius = SQUARE_SIZE//2 - self.PADDING
         pygame.draw.circle(win, GREY, (self.x, self.y), radius + self.OUTLINE)
@@ -28,7 +28,7 @@ class Piece:
         if self.king:
             win.blit(CROWN, (self.x - CROWN.get_width()//2, self.y - CROWN.get_height()//2))
 
-    def move(self, row, col):
+    def _move(self, row, col):
         self.row = row
         self.col = col
         self.calc_pos()

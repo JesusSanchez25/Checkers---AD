@@ -21,7 +21,7 @@ class Board:
     def move(self, piece, row, col):
         # Mueve una pieza a una nueva posición en el tablero
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
-        piece.move(row, col)  # Actualiza la posición de la pieza
+        piece._move(row, col)  # Actualiza la posición de la pieza
 
         # Si la pieza llega a la última fila, se convierte en rey
         if row == ROWS - 1 or row == 0:
@@ -121,6 +121,7 @@ class Board:
             up_stop = -1 if piece.king else max(row - 3, -1)
             moves.update(self._traverse_left(row - 1, up_stop, -1, piece.color, left, is_king=piece.king))
             moves.update(self._traverse_right(row - 1, up_stop, -1, piece.color, right, is_king=piece.king))
+            print(moves)
         # Movimientos hacia abajo (para piezas blancas o reyes)
         if piece.color == WHITE or piece.king:
             down_stop = ROWS if piece.king else min(row + 3, ROWS)
@@ -196,6 +197,29 @@ class Board:
         moves.update(self._traverse_right(start_row, new_stop, step, color, col + 1, skipped, is_king))
 
     def _process_empty_square(self, moves, r, col, last, skipped, step, color, is_king, delta_col):
+        """
+        PROCESA UNA CASILLA VACÍA Y ACTUALIZA MOVIMIENTOS POSIBLES.
+        ----------------------------------------------------------
+        Variables:
+            - moves (dict): Diccionario que almacena {posición_final: [piezas_capturadas]}
+            - r (int): Fila actual donde se encuentra la casilla vacía
+            - col (int): Columna actual donde se encuentra la casilla vacía
+            - last (list): Última pieza capturada en el recorrido
+            - skipped (list): Piezas previamente capturadas en el recorrido
+            - step (int): Dirección vertical (-1 = arriba, 1 = abajo)
+            - color: Color de la pieza que está explorando los movimientos
+            - is_king (bool): Indica si la pieza en cuestión es un rey
+            - delta_col (int): Dirección horizontal (-1 = izquierda, 1 = derecha)
+
+        Lógica de control:
+            - Si hay piezas capturadas en `skipped` pero `last` está vacío, detiene la exploración.
+            - Si `last` contiene una pieza capturada, añade movimientos recursivos para continuar la captura si es posible.
+            - Si no hay piezas en skipped o last, continua la exploración pero se detiene en la función traverse si detecta que la pieza no es reina.
+            - Si la pieza es rey continua y hace otra vuelta del bucle para explorar el tablero.
+
+        Retorna:
+            - (bool): Indica si se debe detener la exploración o continuar
+        """
         if skipped and not last:
             return True  # Break loop
         moves[(r, col)] = last + skipped if skipped else last
@@ -207,17 +231,43 @@ class Board:
     def _update_position(self, r, step, col, delta_col):
         return r + step, col + delta_col
 
-    def _handle_opponent_piece(self, moves, r, col, step, color, skipped, is_king, delta_col, last):
-        if last:
-            return False  # Break outer loop
-        current = self.board[r][col]
+    def _handle_opponent_piece(self, moves, row, col, step, color, skipped, is_king, delta_col, last):
+        """
+        MANEJA UNA PIEZA OPONENTE DURANTE LA EXPLORACIÓN.
+        -------------------------------------------------
+        Variables:
+            - moves (dict): Diccionario que almacena {posición_final: [piezas_capturadas]}
+            - r (int): Fila actual de exploración
+            - col (int): Columna actual de exploración
+            - step (int): Dirección vertical de la exploración (-1 = arriba, 1 = abajo)
+            - color (str): Color de la pieza en movimiento (para detectar enemigos)
+            - skipped (list): Lista de piezas previamente capturadas en la secuencia
+            - is_king (bool): Indica si la pieza en movimiento es un rey
+            - delta_col (int): Dirección horizontal de la exploración (-1 = izquierda, 1 = derecha)
+            - last (list): Lista temporal que almacena la última pieza oponente detectada
+
+        Proceso de validación:
+            1. Se obtiene la pieza actual en la posición `(r, col)`.
+            2. Se añade a `last` como una posible pieza a capturar.
+            3. Se calcula la posición siguiente (`next_r`, `next_col`), donde la pieza en movimiento aterrizaría.
+            4. Se verifica si la siguiente casilla está dentro de los límites del tablero.
+            5. Si la casilla siguiente está vacía, se almacena la jugada con las piezas capturadas.
+            6. Si no hay espacio después de la casilla termina la ejecución y devuelve true.
+
+        Retorna:
+            - True si se debe detener explorando la captura.
+            - False si se debe continuar la exploración en esta dirección.
+        """
+        current = self.board[row][col]
         last.append(current)
-        next_r = r + step
+        next_r = row + step
         next_col = col + delta_col
         if next_col < 0 or next_col >= COLS or next_r < 0 or next_r >= ROWS:
             return False  # Break outer loop
         next_current = self.board[next_r][next_col]
+        # Si esta casilla es vacía, se almacena la jugada con las piezas capturadas
+        # e intenta buscar otra posible ficha para comer
         if next_current == 0:
             moves[(next_r, next_col)] = last + skipped
             self._add_recursive_moves(moves, next_r, step, color, next_col, last + skipped, is_king)
-        return True  # Continue processing
+        return True  # Stop processing

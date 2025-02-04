@@ -198,12 +198,9 @@ class Board:
                         step = -step
                         new_stop = 0 if step == -1 else ROWS
                         moves.update(self._traverse_left(
-                        r + step, new_stop, step, color, left - 1, skipped=last + skipped, is_king=is_king))
-                        # moves.update(self._traverse_right(
-                        #     r + step, new_stop, step, color, left + 1, skipped=last + skipped, is_king=is_king
-                        # ))
+                        r + step, new_stop, step, color, left - 1, skipped=last + skipped,is_king=is_king))
 
-                    break  # Detener exploración en esta dirección
+
                 else:
                     # Si es rey, continuar explorando
                     if is_king:
@@ -253,8 +250,6 @@ class Board:
                     moves.update(self._traverse_right(
                         next_r + step, new_stop, step, color, next_left + 1, skipped=last + skipped, is_king=is_king
                     ))
-
-
                 else:
                     break  # No se puede saltar sobre dos piezas
 
@@ -317,9 +312,7 @@ class Board:
                     # Explorar en ambas direcciones después de la captura
                             # Movimientos hacia arriba (para piezas rojas o reyes)
 
-                    moves.update(self._traverse_left(
-                        r + step, new_stop, step, color, right - 1, skipped=last + skipped, is_king=is_king
-                    ))
+
                     moves.update(self._traverse_right(
                         r + step, new_stop, step, color, right + 1, skipped=last + skipped, is_king=is_king
                     ))
@@ -327,9 +320,9 @@ class Board:
                     if is_king:
                         step = -step
                         new_stop = 0 if step == -1 else ROWS
-                    #     moves.update(self._traverse_left(
-                    #     r - step, new_stop, step, color, right - 1, skipped=last + skipped, is_king=is_king
-                    # ))
+                        moves.update(self._traverse_left(
+                        r + step, new_stop, step, color, right - 1, skipped=last + skipped, is_king=is_king
+                    ))
                         moves.update(self._traverse_right(
                             r + step, new_stop, step, color, right + 1, skipped=last + skipped, is_king=is_king
                         ))

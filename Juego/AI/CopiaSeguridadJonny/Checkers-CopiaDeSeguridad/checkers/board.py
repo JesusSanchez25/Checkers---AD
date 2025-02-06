@@ -1,4 +1,4 @@
-import pygame
+import pygame # type: ignore
 from .constants import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
 from .piece import Piece
 
@@ -11,6 +11,35 @@ class Board:
         self.red_left = self.white_left = 12
         self.red_kings = self.white_kings = 0  # Número de reyes rojos y blancos
         self.create_board()  # Llama a la función para crear el tablero inicial
+
+    def print_board(self):
+        """
+        Imprime el tablero en consola con colores y símbolos para las piezas.
+        - 🔴: Pieza roja normal
+        - ⚪: Pieza blanca normal
+        - ♔: Rey (se añade a los símbolos anteriores)
+        """
+        for row in range(ROWS):
+            # Crear línea horizontal entre filas
+            print("-" * (COLS * 5 + 1))
+
+            # Construir línea de fichas
+            line = "|"
+            for col in range(COLS):
+                piece = self.board[row][col]
+                if piece == 0:
+                    line += "    |"
+                else:
+                    color_code = "\033[91m" if piece.color == RED else "\033[97m"
+                    symbol = "🔴" if piece.color == RED else "⚪"
+                    if piece.king:
+                        symbol += "♔"
+                    line += f"{color_code} {symbol} \033[0m|"
+            print(line)
+
+        print("-" * (COLS * 5 + 1))
+        print("\n\n\n")
+
 
     def draw_squares(self, win):
         # Dibuja los cuadrados del tablero en la ventana proporcionada
@@ -127,7 +156,6 @@ class Board:
                          1, piece.color, left, is_king=piece.king))
             moves.update(self._traverse_right(row - 1, up_stop, -
                          1, piece.color, right, is_king=piece.king))
-            print(moves)
         # Movimientos hacia abajo (para piezas blancas o reyes)
         if piece.color == WHITE or piece.king:
             down_stop = ROWS if piece.king else min(row + 3, ROWS)
@@ -184,7 +212,9 @@ class Board:
                     if is_king:
                         new_stop = 0 if step == -1 else ROWS  # Reyes: hasta bordes
                     else:
-                        new_stop = max(r - 3, 0) if step == -1 else min(r + 3, ROWS)  # Piezas normales: 3 filas
+                        # Piezas normales: 3 filas
+                        new_stop = max(r - 3, 0) if step == - \
+                            1 else min(r + 3, ROWS)
 
                     # Explorar en ambas direcciones después de la captura
                     moves.update(self._traverse_left(
@@ -198,8 +228,7 @@ class Board:
                         step = -step
                         new_stop = 0 if step == -1 else ROWS
                         moves.update(self._traverse_left(
-                        r + step, new_stop, step, color, left - 1, skipped=last + skipped,is_king=is_king))
-
+                            r + step, new_stop, step, color, left - 1, skipped=last + skipped, is_king=is_king))
 
                 else:
                     # Si es rey, continuar explorando
@@ -241,7 +270,8 @@ class Board:
                     if is_king:
                         new_stop = 0 if step == -1 else ROWS
                     else:
-                        new_stop = max(next_r - 3, 0) if step == -1 else min(next_r + 3, ROWS)
+                        new_stop = max(next_r - 3, 0) if step == - \
+                            1 else min(next_r + 3, ROWS)
 
                     # Explorar en ambas direcciones después de la captura
                     moves.update(self._traverse_left(
@@ -258,7 +288,6 @@ class Board:
             left -= 1
 
         return moves
-
 
     def _traverse_right(self, start, stop, step, color, right, skipped=[], is_king=False):
         """
@@ -307,11 +336,12 @@ class Board:
                     if is_king:
                         new_stop = 0 if step == -1 else ROWS  # Reyes: hasta bordes
                     else:
-                        new_stop = max(r - 3, 0) if step == -1 else min(r + 3, ROWS)  # Piezas normales: 3 filas
+                        # Piezas normales: 3 filas
+                        new_stop = max(r - 3, 0) if step == - \
+                            1 else min(r + 3, ROWS)
 
                     # Explorar en ambas direcciones después de la captura
-                            # Movimientos hacia arriba (para piezas rojas o reyes)
-
+                        # Movimientos hacia arriba (para piezas rojas o reyes)
 
                     moves.update(self._traverse_right(
                         r + step, new_stop, step, color, right + 1, skipped=last + skipped, is_king=is_king
@@ -321,8 +351,8 @@ class Board:
                         step = -step
                         new_stop = 0 if step == -1 else ROWS
                         moves.update(self._traverse_left(
-                        r + step, new_stop, step, color, right - 1, skipped=last + skipped, is_king=is_king
-                    ))
+                            r + step, new_stop, step, color, right - 1, skipped=last + skipped, is_king=is_king
+                        ))
                         moves.update(self._traverse_right(
                             r + step, new_stop, step, color, right + 1, skipped=last + skipped, is_king=is_king
                         ))
@@ -368,7 +398,8 @@ class Board:
                     if is_king:
                         new_stop = 0 if step == -1 else ROWS
                     else:
-                        new_stop = max(next_r - 3, 0) if step == -1 else min(next_r + 3, ROWS)
+                        new_stop = max(next_r - 3, 0) if step == - \
+                            1 else min(next_r + 3, ROWS)
 
                     # Explorar en ambas direcciones después de la captura
                     moves.update(self._traverse_left(

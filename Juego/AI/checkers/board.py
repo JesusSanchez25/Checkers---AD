@@ -346,13 +346,14 @@ class Board:
                     moves.update(self._traverse_right(
                         r + step, new_stop, step, color, right + 1, skipped=last + skipped, is_king=is_king
                     ))
+                    moves.update(self._traverse_left(
+                        r + step, new_stop, step, color, right - 1, skipped=last + skipped, is_king=is_king
+                    ))
 
                     if is_king:
                         step = -step
                         new_stop = 0 if step == -1 else ROWS
-                        moves.update(self._traverse_left(
-                            r + step, new_stop, step, color, right - 1, skipped=last + skipped, is_king=is_king
-                        ))
+
                         moves.update(self._traverse_right(
                             r + step, new_stop, step, color, right + 1, skipped=last + skipped, is_king=is_king
                         ))

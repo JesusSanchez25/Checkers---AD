@@ -1,6 +1,12 @@
 import pygame
 from .constants import RED, WHITE, BLUE, SQUARE_SIZE, IA_MATCH, PROFUNDIDAD
-
+from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE, IA_MATCH, PROFUNDIDAD
+from checkers.nodos import Nodo, imprimir_arbol, arbol_a_json, min_max
+from checkers.board import Board
+from checkers.ai import *
+import pyperclip
+import copy
+import json
 from checkers.board import Board
 
 class Game:
@@ -31,6 +37,12 @@ class Game:
             if not result:
                 self.selected = None
                 self.select(row, col)
+            else:
+                self.update()
+                if self.turn == WHITE:
+                    nuevo_nodo = Nodo("Raiz")
+                    comprobarMovimientosIa(self.board, color=self.turn, nodoActual=nuevo_nodo, game=self)
+                    self.turn = RED
 
 
         piece = self.board.get_piece(row, col)

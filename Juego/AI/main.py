@@ -1,5 +1,5 @@
 import pygame
-from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE
+from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE, IA_MATCH, PROFUNDIDAD
 from checkers.game import Game
 from checkers.nodos import Nodo, imprimir_arbol, arbol_a_json, min_max
 from checkers.board import Board
@@ -8,7 +8,7 @@ import copy
 import json
 
 FPS = 60
-PROFUNDIDAD = 2
+
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Checkers')
@@ -86,8 +86,7 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
                         # --- 4. Evaluar el tablero si se alcanza la profundidad 0 ---
                         # Si se alcanza la profundidad 0, evalúa el tablero resultante.
                         if profundidad == 0:
-                            # board_copia.print_board()  # Opcional: imprime el tablero clonado.
-                            nodoHijo.puntuacion = evaluate_board_iter(board_copia, color)  # Evalúa el tablero.
+                            nodoHijo.puntuacion = evaluate_board(board_copia, color)  # Evalúa el tablero.
                         nodoActual.agregar_hijo(nodoHijo)
 
                         # --- 5. Explorar movimientos futuros (recursión) ---
@@ -228,7 +227,7 @@ def eval_piece_count(piece, board, row, col):
         return 10
     return 5
 
-def evaluate_board_iter(board, player_color):
+def evaluate_board(board, player_color):
     """
     Itera una sola vez por todo el tablero y, para cada pieza encontrada,
     aplica las funciones de valoración auxiliares:

@@ -1,5 +1,6 @@
 import pygame
-from .constants import RED, WHITE, BLUE, SQUARE_SIZE
+from .constants import RED, WHITE, BLUE, SQUARE_SIZE, IA_MATCH, PROFUNDIDAD
+
 from checkers.board import Board
 
 class Game:
@@ -30,6 +31,7 @@ class Game:
             if not result:
                 self.selected = None
                 self.select(row, col)
+
 
         piece = self.board.get_piece(row, col)
         if piece != 0 and piece.color == self.turn:

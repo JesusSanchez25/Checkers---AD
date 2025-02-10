@@ -24,6 +24,7 @@ def arbol_a_json(nodo):
     """
     return {
         "valor": nodo.valor,
+        "puntuacion": nodo.puntuacion,
         "hijos": [arbol_a_json(hijo) for hijo in nodo.hijos]
     }
 
@@ -66,13 +67,19 @@ def min_max(nodoActual, profundidad, maximo: bool = True):
 		# Si es el turno del maximizador:
 		for hijo in nodoActual.hijos:
 			# Calcula recursivamente los valores de los hijos alternando al minimizador.
-			hijos.append(min_max(hijo, profundidad - 1, False))
+			next_max_node = min_max(hijo, profundidad - 1, False)
+			hijos.append(next_max_node)
+			nodoActual.puntuacion = max(hijos, key=lambda item: item.puntuacion).puntuacion
+		if nodoActual.valor == "Raiz":
+			return max(nodoActual.hijos, key=lambda item: item.puntuacion)
 		return max(hijos, key=lambda item: item.puntuacion)
 	else:
 		# Si es el turno del minimizador:
 		for hijo in nodoActual.hijos:
 			# Calcula recursivamente los valores de los hijos alternando al maximizador.
-			hijos.append(min_max(hijo, profundidad - 1, True))
+			next_max_node = min_max(hijo, profundidad - 1, True)
+			hijos.append(next_max_node)
+			nodoActual.puntuacion = min(hijos, key=lambda item: item.puntuacion).puntuacion
 		return min(hijos, key=lambda item: item.puntuacion)
 
 # Bloque principal del programa.

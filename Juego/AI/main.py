@@ -43,7 +43,8 @@ def main():
                 game.select(row, col)
 
                 # game.board.print_board()
-                comprobarMovimientosIa(game.board, color=game.turn)
+                nuevo_nodo = Nodo("Raiz")
+                comprobarMovimientosIa(game.board, color=game.turn, nodoActual=nuevo_nodo)
 
 
         game.update()
@@ -93,14 +94,17 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
                         # Si no se ha alcanzado la profundidad máxima, sigue explorando.
                         if profundidad > 0:
                             # Cambia al color del oponente para simular su turno.
-                            if profundidad != PROFUNDIDAD:
-                                color = RED if str(color) == WHITE else WHITE
-                            comprobarMovimientosIa(board_copia, color, profundidad - 1, nodoHijo)
+                            if nodoActual != Nodo("Raiz"):
+                                nuevaProfundidad = profundidad - 1
+                                nuevoColor = RED if str(color) == WHITE else WHITE
+                                comprobarMovimientosIa(board_copia, nuevoColor, nuevaProfundidad, nodoHijo)
+                            else:
+                                comprobarMovimientosIa(board_copia, color, profundidad, nodoHijo)
 
                         # --- 6. Imprimir el árbol (solo para el nodo raíz) ---
                         # Si es el nodo raíz, imprime el árbol (para depuración).
                         if nodoActual.valor == "Raiz":
-                            siguienteMove = min_max(nodoActual, profundidad+1)
+                            siguienteMove = min_max(nodoActual, profundidad + 1)
                             arbol_json = str(arbol_a_json(nodoActual))
                             arbol_json = arbol_json.replace("'", '"')
                             pyperclip.copy(arbol_json)

@@ -68,7 +68,6 @@ def min_max(nodoActual, profundidad, maximo: bool = True):
 			# Calcula recursivamente los valores de los hijos alternando al minimizador.
 			hijos.append(min_max(hijo, profundidad - 1, False))
 		return max(hijos, key=lambda item: item.puntuacion)
-
 	else:
 		# Si es el turno del minimizador:
 		for hijo in nodoActual.hijos:

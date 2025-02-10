@@ -341,7 +341,7 @@ class Board:
                             1 else min(r + 3, ROWS)
 
                     # Explorar en ambas direcciones después de la captura
-                        # Movimientos hacia arriba (para piezas rojas o reyes)
+                    # Movimientos hacia arriba (para piezas rojas o reyes)
 
                     moves.update(self._traverse_right(
                         r + step, new_stop, step, color, right + 1, skipped=last + skipped, is_king=is_king

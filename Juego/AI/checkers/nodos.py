@@ -10,6 +10,7 @@ class Nodo:
 	def __init__(self, valor):
 		# Inicializa el nodo con un valor y una lista vacía de hijos.
 		self.valor = valor
+		self.puntuacion = 0
 		self.hijos = []
 
 	def agregar_hijo(self, hijo):
@@ -17,18 +18,23 @@ class Nodo:
 		self.hijos.append(hijo)
 
 # Función para imprimir el árbol de manera jerárquica.
-
+def arbol_a_json(nodo):
+    """
+    Convierte el árbol a un diccionario en formato JSON.
+    """
+    return {
+        "valor": nodo.valor,
+        "hijos": [arbol_a_json(hijo) for hijo in nodo.hijos]
+    }
 
 def imprimir_arbol(nodo, nivel=0):
 	# Imprime el valor del nodo con una indentación basada en el nivel.
-	print("  " * nivel + f"=={nodo.valor}")
+	print("  " * nivel + f"=={nodo.valor} + ({nodo.puntuacion}) ==")
 	for hijo in nodo.hijos:  # Recorre los hijos del nodo actual.
 		# Llama recursivamente para imprimir los hijos.
 		imprimir_arbol(hijo, nivel + 1)
 
 # Función recursiva para crear el árbol.
-
-
 def crear_arbol(profundidad: int = 0, nodoActual: Nodo = None):
 	# Caso base: si la profundidad es 0, se detiene la recursión.
 	if (profundidad == 0):
@@ -48,27 +54,12 @@ def crear_arbol(profundidad: int = 0, nodoActual: Nodo = None):
 # Función alternativa para aplicar el algoritmo Min-Max (estructura similar a min_max).
 
 
-def min_max_TEST(nodoActual: Nodo, profundidad: int, maximo: bool = True):
-	if profundidad == 0 or not nodoActual.hijos:
-		# Caso base: si es una hoja o la profundidad es 0, devuelve el valor del nodo.
-		return nodoActual.valor
-
-	valores = []  # Lista para almacenar los valores calculados de los hijos.
-	for hijo in nodoActual.hijos:
-		# Llama recursivamente alternando entre maximizador y minimizador.
-		valor = min_max(hijo, profundidad - 1, not maximo)
-		valores.append(valor)  # Agrega el valor retornado a la lista.
-
-	# Devuelve el máximo o mínimo dependiendo de si es turno del maximizador o minimizador.
-	return max(valores) if maximo else min(valores)
 
 # Función principal que implementa el algoritmo Min-Max.
-
-
 def min_max(nodoActual, profundidad, maximo: bool = True):
 	if (profundidad == 0):
 		# Caso base: si la profundidad es 0, devuelve el valor del nodo actual.
-		return nodoActual.valor
+		return nodoActual
 	hijos = []  # Lista para almacenar los valores calculados de los hijos.
 
 	if (maximo):
@@ -76,14 +67,14 @@ def min_max(nodoActual, profundidad, maximo: bool = True):
 		for hijo in nodoActual.hijos:
 			# Calcula recursivamente los valores de los hijos alternando al minimizador.
 			hijos.append(min_max(hijo, profundidad - 1, False))
-		return max(hijos)  # Devuelve el mayor valor de los hijos.
+		return max(hijos, key=lambda item: item.puntuacion)
+
 	else:
 		# Si es el turno del minimizador:
 		for hijo in nodoActual.hijos:
 			# Calcula recursivamente los valores de los hijos alternando al maximizador.
-			hijos.append(min_max(hijo, profundidad - 1))
-		return min(hijos)  # Devuelve el menor valor de los hijos.
-
+			hijos.append(min_max(hijo, profundidad - 1, True))
+		return min(hijos, key=lambda item: item.puntuacion)
 
 # Bloque principal del programa.
 if __name__ == "__main__":
@@ -94,8 +85,6 @@ if __name__ == "__main__":
 	imprimir_arbol(arbol)  # Imprime el árbol completo en forma jerárquica.
 	# Aplica el algoritmo Min-Max y muestra el resultado.
 	print(min_max(arbol, PROFUNDIDAD))
-	# Aplica la versión alternativa de Min-Max y muestra el resultado.
-	print(min_max_TEST(arbol, PROFUNDIDAD))
 
 
 """movimientos_valores = {

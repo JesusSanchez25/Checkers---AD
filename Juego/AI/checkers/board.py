@@ -106,7 +106,6 @@ class Board:
                     self.red_left -= 1  # Reduce el contador de piezas rojas
                 else:
                     self.white_left -= 1  # Reduce el contador de piezas blancas
-
     def winner(self):
         # Determina si hay un ganador basado en el número de piezas restantes
         if self.red_left <= 0:

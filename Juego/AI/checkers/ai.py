@@ -11,7 +11,6 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
     # Itera sobre cada fila y columna del tablero para encontrar piezas del color de la IA.
     for i, fila in enumerate(board.board):
         for j, pieza in enumerate(fila):
-            # Verifica si la pieza es del color de la IA.
             if str(pieza) == str(color):
                 # Obtiene los movimientos válidos para la pieza actual.
                 moves = board.get_valid_moves(pieza)
@@ -38,26 +37,29 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
 
                         # Mueve la pieza en el tablero clonado a la nueva posición.
                         board_copia.move(pieza_copia, nuevaRow, nuevaCol)
+                        board_copia.remove(capturas)
+                        # board_copia.print_board()
+                        # if capturas != []:
+                        #     board_copia.print_board()
 
                         # --- 4. Evaluar el tablero si se alcanza la profundidad 0 ---
                         # Si se alcanza la profundidad 0, evalúa el tablero resultante.
                         if profundidad == 0:
                             # Evalúa el tablero.
                             nodoHijo.puntuacion = evaluate_board(
-                                board_copia, color)
-                        nodoActual.agregar_hijo(nodoHijo)
-
+                                board_copia, player_color=WHITE)
                         # --- 5. Explorar movimientos futuros (recursión) ---
                         # Si no se ha alcanzado la profundidad máxima, sigue explorando.
-                        if profundidad > 0:
+                        elif profundidad > 0:
                             # Cambia al color del oponente para simular su turno.
-                            if nodoActual == Nodo("Raiz"):
-                                comprobarMovimientosIa(
-                                    board_copia, color, profundidad, nodoHijo)
-                            else:
-                                nuevaProfundidad = profundidad - 1
-                                nuevoColor = RED if str(color) == WHITE else WHITE
-                                comprobarMovimientosIa(board_copia, nuevoColor, nuevaProfundidad, nodoHijo)
+                            nuevaProfundidad = profundidad - 1
+                            nuevoColor = RED if str(color) == str(WHITE) else WHITE
+                            # board_copia.print_board()
+                            comprobarMovimientosIa(board_copia, nuevoColor, nuevaProfundidad, nodoHijo)
+                        nodoActual.agregar_hijo(nodoHijo)
+
+
+
                         # --- 6. Restaurar la posición original de la pieza ---
                         # Restaura la posición original de la pieza en el tablero real.
                         pieza.row, pieza.col = fila_original, col_original
@@ -192,8 +194,8 @@ def eval_piece_count(piece, board, row, col):
     """
     rows = len(board.board)
     if piece.king:
-        return 10
-    return 5
+        return 20
+    return 10
 
 def evaluate_board(board, player_color):
     """
@@ -221,12 +223,12 @@ def evaluate_board(board, player_color):
 
             # Suma de la valoración de esta pieza según cada criterio
             piece_score = 0
-            piece_score += eval_capture_options(piece, board)
+            # piece_score += eval_capture_options(piece, board)
             piece_score += eval_piece_risk(piece, board, row, col)
             piece_score += eval_chain_defense(piece, board, row, col)
             piece_score += eval_center_control(piece, board, row, col)
-            piece_score += eval_edge_pieces(piece, board, row, col)
-            piece_score += eval_advanced_pieces(piece, board, row, col)
+            # piece_score += eval_edge_pieces(piece, board, row, col)
+            # piece_score += eval_advanced_pieces(piece, board, row, col)
             piece_score += eval_piece_count(piece, board, row, col)
 
             # Si la pieza es del jugador, se suma; si es del oponente, se resta.

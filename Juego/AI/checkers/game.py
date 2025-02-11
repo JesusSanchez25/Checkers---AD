@@ -44,7 +44,6 @@ class Game:
                     comprobarMovimientosIa(self.board, color=self.turn, nodoActual=nuevo_nodo, game=self)
                     self.turn = RED
 
-
         piece = self.board.get_piece(row, col)
         if piece != 0 and piece.color == self.turn:
             self.selected = piece

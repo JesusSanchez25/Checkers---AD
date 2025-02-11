@@ -187,7 +187,7 @@ class Board:
         # Bucle principal: recorre la diagonal izquierda
         while (step > 0 and r < stop) or (step < 0 and r > stop):
             # Verificar límite izquierdo del tablero
-            if left < 0:
+            if left < 0 or (self.get_piece(r, left)) in skipped:
                 break
 
             # Obtener la pieza en la posición actual
@@ -309,9 +309,9 @@ class Board:
         r = start   # Fila actual de exploración
 
         # Bucle principal: recorre la diagonal derecha
-        while (step > 0 and r < stop) or (step < 0 and r > stop):
+        while ((step > 0 and r < stop) or (step < 0 and r > stop) and last == []):
             # Verificar límite derecho del tablero
-            if right >= COLS:
+            if right >= COLS  or (self.get_piece(r, right)) in skipped:
                 break
 
             # Obtener la pieza en la posición actual

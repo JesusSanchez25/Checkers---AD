@@ -58,7 +58,7 @@ def crear_arbol(profundidad: int = 0, nodoActual: Nodo = None):
 
 # Función principal que implementa el algoritmo Min-Max.
 def min_max(nodoActual, profundidad, maximo: bool = True):
-	if (profundidad == 0):
+	if (len(nodoActual.hijos) == 0):
 		# Caso base: si la profundidad es 0, devuelve el valor del nodo actual.
 		return nodoActual
 	hijos = []  # Lista para almacenar los valores calculados de los hijos.

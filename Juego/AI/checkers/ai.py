@@ -44,7 +44,7 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
 
                         # --- 4. Evaluar el tablero si se alcanza la profundidad 0 ---
                         # Si se alcanza la profundidad 0, evalúa el tablero resultante.
-                        if profundidad == 0:
+                        if  profundidad == 0:
                             # Evalúa el tablero.
                             nodoHijo.puntuacion = evaluate_board(
                                 board_copia, player_color=WHITE)
@@ -68,6 +68,9 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
     # Si es el nodo raíz, imprime el árbol (para depuración).
     if nodoActual.valor == "Raiz":
         siguienteMove = min_max(nodoActual, profundidad + 1)
+
+        if (siguienteMove.valor == "Raiz"):
+            return
         move_origen, move_destino, capturas = siguienteMove.valor.split("-")
 
         row_origen = int(move_origen.split(",")[0])

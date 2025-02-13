@@ -1,5 +1,4 @@
 import copy
-import pyperclip
 from juego.board import Board
 from juego.constants import PROFUNDIDAD, BLUE, PINK
 from juego.nodos import Nodo, min_max, arbol_a_json
@@ -80,9 +79,9 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
 
         game.select(row_origen, col_origen)
         game.select(row_destino, col_destino)
-        arbol_json = str(arbol_a_json(nodoActual))
-        arbol_json = arbol_json.replace("'", '"')
-        pyperclip.copy(arbol_json)
+        # arbol_json = str(arbol_a_json(nodoActual))
+        # arbol_json = arbol_json.replace("'", '"')
+        # pyperclip.copy(arbol_json)
 
         print(siguienteMove.valor, siguienteMove.puntuacion)
 

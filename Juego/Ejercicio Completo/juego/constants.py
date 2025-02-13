@@ -7,7 +7,7 @@ BOARD_BORDER = 50
 TIME = 300
 
 IA_MATCH = True
-PROFUNDIDAD = 5
+PROFUNDIDAD = 4
 
 pink_piece = pygame.transform.scale(pygame.image.load('assets/piezas/pink_piece.png'), (SQUARE_SIZE, SQUARE_SIZE))
 blue_piece = pygame.transform.scale(pygame.image.load('assets/piezas/blue_piece2.png'), (SQUARE_SIZE, SQUARE_SIZE))

@@ -45,8 +45,7 @@ class Game:
                 self.update()
                 if self.turn == BLUE and IA_MATCH:
                     nuevo_nodo = Nodo("Raiz")
-                    # comprobarMovimientosIa(self.board, color=self.turn, nodoActual=nuevo_nodo, game=self)
-                    comprobarMovimientosIa_pytorch(self.board, color=self.turn, nodoActual=nuevo_nodo)
+                    comprobarMovimientosIa(self.board, color=self.turn, nodoActual=nuevo_nodo, game=self)
                     self.turn = PINK
 
         piece = self.board.get_piece(row, col)

@@ -1,0 +1,1 @@
+from checkers.juego.constants import *

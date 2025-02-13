@@ -1,10 +1,18 @@
 import copy
 from juego.board import Board
-from juego.constants import PROFUNDIDAD, BLUE, PINK
+from juego.constants import PROFUNDIDAD, BLUE, PINK, CAPTURA_OBLIGATORIA
 from juego.nodos import Nodo, min_max, arbol_a_json
 import torch
 
 def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoActual=Nodo("Raiz"), game = None):
+    hay_capturas = False
+    if (CAPTURA_OBLIGATORIA):
+        hay_capturas = any(
+            any(capturas for _, capturas in board.get_valid_moves(pieza).items())
+            for fila in board.board for pieza in fila
+            if str(pieza) == str(color)
+        )
+
     # --- 1. Recorrer el tablero ---
     # Itera sobre cada fila y columna del tablero para encontrar piezas del color de la IA.
     for i, fila in enumerate(board.board):
@@ -12,6 +20,10 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
             if str(pieza) == str(color):
                 # Obtiene los movimientos válidos para la pieza actual.
                 moves = board.get_valid_moves(pieza)
+
+                if (hay_capturas and CAPTURA_OBLIGATORIA):
+                    moves = {m: c for m, c in moves.items() if c}
+                    if not moves: continue
 
                 # Si hay movimientos válidos, procesa cada uno.
                 if len(moves) > 0:
@@ -36,13 +48,15 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
                         # Mueve la pieza en el tablero clonado a la nueva posición.
                         board_copia.move(pieza_copia, nuevaRow, nuevaCol)
                         board_copia.remove(capturas)
+                        if(capturas):
+                            print(capturas)
                         # board_copia.print_board()
                         # if capturas != []:
                         #     board_copia.print_board()
 
                         # --- 4. Evaluar el tablero si se alcanza la profundidad 0 ---
                         # Si se alcanza la profundidad 0, evalúa el tablero resultante.
-                        if  profundidad == 0:
+                        if  profundidad == 0 or es_estado_terminal(board_copia, PINK):
                             # Evalúa el tablero.
                             nodoHijo.puntuacion = evaluate_board(
                                 board_copia, player_color=BLUE)
@@ -270,3 +284,11 @@ def evaluate_board(board, player_color):
 
     # # Actualizar el estado del juego (si es necesario)
     # game.update()
+
+def es_estado_terminal(board: Board, color_jugador) -> bool:
+    """Verifica si el jugador no tiene movimientos posibles (juego terminado)"""
+    for fila in board.board:
+        for pieza in fila:
+            if str(pieza) == str(color_jugador) and board.get_valid_moves(pieza):
+                return False
+    return True

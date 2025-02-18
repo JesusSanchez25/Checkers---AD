@@ -5,6 +5,7 @@ import pygame
 from juego.board import Board
 from juego.constants import WIDTH, BOARD_BORDER, HEIGHT, SQUARE_SIZE, PINK, BLUE
 from juego.game import Game
+from juego.home import iniciarMenu
 
 FPS = 60
 
@@ -32,7 +33,22 @@ def get_position_from_mouse(pos):  # la posicion conssiste en (cordenada_x, cord
 def main():
     run = True
     clock = pygame.time.Clock()
-    game = Game(WIN)
+    seleccion = iniciarMenu()
+
+    if seleccion == "salir":
+        print("saliendo desde el menu")
+        pygame.quit()
+        return
+
+    if seleccion == "ia":
+        ia = True
+
+    if seleccion == "jugador":
+        ia = False
+
+
+
+    game = Game(WIN, ia)
 
     while run:
         clock.tick(FPS)

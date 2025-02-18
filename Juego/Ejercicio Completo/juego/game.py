@@ -9,9 +9,10 @@ from juego.constants import IA_MATCH, HEIGHT
 
 
 class Game:
-    def __init__(self, win):
+    def __init__(self, win, ia):
         self._init()
         self.win = win
+        self.ia = ia
 
     def update(self):
         self.update_timer()
@@ -43,6 +44,8 @@ class Game:
                 self.select(row, col)
             else:
                 self.update()
+                global IA_MATCH
+                IA_MATCH= self.ia
                 if self.turn == BLUE and IA_MATCH:
                     nuevo_nodo = Nodo("Raiz")
                     comprobarMovimientosIa(self.board, color=self.turn, nodoActual=nuevo_nodo, game=self)
@@ -69,6 +72,7 @@ class Game:
             return False
 
         return True
+
 
     def draw_valid_moves(self, moves):
         for move in moves:

@@ -96,20 +96,6 @@ class Board:
 
 
 
-                # placeholder marcador
-                time_text = font.render(f"{"00:00"}", True, (255, 255, 255))
-                blue_time = font.render(f"{"00:00"}", True, (23, 151, 253))
-
-                if row == 0:
-                    if IA_MATCH:
-                        win.blit(time_text, (HEIGHT // 2 + BOARD_BORDER // 4, SQUARE_SIZE // 6))
-                    # else:
-                    #     # win.blit(pink_time, (HEIGHT // 4 + BOARD_BORDER // 4, SQUARE_SIZE // 6))
-                    #     win.blit(blue_time, (HEIGHT // 4 * 3 + BOARD_BORDER // 4, SQUARE_SIZE // 6))
-
-
-
-
                 if col == 0:  # dibujar nuemros cuando sea la primera columna
                     for i, numero in enumerate(numeros_neon): # recorre el array con los numeros
                         # va pintando los numeros en orden, en la posicion i * el tamaño del cuadrado
@@ -118,7 +104,6 @@ class Board:
                 if row == ROWS - 1:  # dibujar letras cuando sea la ultima fila 8 - 1 = 7 (ultima fila)
                     for i, letra in enumerate(letras_neon): #dibuajr las letras en la posicion correspondiente
                         win.blit(letra, (i * SQUARE_SIZE + BOARD_BORDER + SQUARE_SIZE // 4, 5 + HEIGHT + BOARD_BORDER))
-
 
 
     def move(self, piece, row, col):

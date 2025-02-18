@@ -2,6 +2,7 @@ import copy
 from juego.board import Board
 from juego.constants import PROFUNDIDAD, BLUE, PINK, CAPTURA_OBLIGATORIA
 from juego.nodos import Nodo, min_max, arbol_a_json
+import pyperclip
 import torch
 
 def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoActual=Nodo("Raiz"), game = None):
@@ -48,8 +49,7 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
                         # Mueve la pieza en el tablero clonado a la nueva posición.
                         board_copia.move(pieza_copia, nuevaRow, nuevaCol)
                         board_copia.remove(capturas)
-                        if(capturas):
-                            print(capturas)
+
                         # board_copia.print_board()
                         # if capturas != []:
                         #     board_copia.print_board()
@@ -93,11 +93,10 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
 
         game.select(row_origen, col_origen)
         game.select(row_destino, col_destino)
-        # arbol_json = str(arbol_a_json(nodoActual))
-        # arbol_json = arbol_json.replace("'", '"')
-        # pyperclip.copy(arbol_json)
+        arbol_json = str(arbol_a_json(nodoActual))
+        arbol_json = arbol_json.replace("'", '"')
+        pyperclip.copy(arbol_json)
 
-        print(siguienteMove.valor, siguienteMove.puntuacion)
 
 
 def eval_capture_options(piece, board):
@@ -196,10 +195,10 @@ def eval_advanced_pieces(piece, board, row, col):
         return 0
     if piece.color == BLUE:
         # Para WHITE, se asume que avanzar significa estar en filas de mayor índice
-        return 3 * row
+        return 4 * row
     else:
         # Para RED, se asume que avanzar significa estar en filas de menor índice
-        return 3 * (rows - 1 - row)
+        return 4 * (rows - 1 - row)
 
 def eval_piece_count(piece, board, row, col):
     """
@@ -243,7 +242,7 @@ def evaluate_board(board, player_color):
             piece_score += eval_chain_defense(piece, board, row, col)
             piece_score += eval_center_control(piece, board, row, col)
             # piece_score += eval_edge_pieces(piece, board, row, col)
-            # piece_score += eval_advanced_pieces(piece, board, row, col)
+            piece_score += eval_advanced_pieces(piece, board, row, col)
             piece_score += eval_piece_count(piece, board, row, col)
 
             # Si la pieza es del jugador, se suma; si es del oponente, se resta.

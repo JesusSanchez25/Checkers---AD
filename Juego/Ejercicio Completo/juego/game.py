@@ -3,10 +3,12 @@ import time
 from juego.ai import comprobarMovimientosIa
 from juego.board import Board
 from juego.nodos import Nodo
+from juego.db import cargar_movimientos, respuesta_movimientos
 from juego.constants import PINK, SQUARE_SIZE, BOARD_BORDER, BLUE, HEIGHT, TIME
 
-from juego.constants import IA_MATCH, HEIGHT
-
+from juego.constants import IA_MATCH, HEIGHT, DB_ACTIVE
+from juego.loser import menu_loser
+from juego.winner import menu_winner
 
 class Game:
     def __init__(self, win, ia):
@@ -37,6 +39,8 @@ class Game:
         self._init()
 
     def select(self, row, col):
+        prev_row = self.selected.row if self.selected else None
+        prev_col = self.selected.col if self.selected else None
         if self.selected:
             result = self._move(row, col)
             if not result:
@@ -48,7 +52,10 @@ class Game:
                 IA_MATCH= self.ia
                 if self.turn == BLUE and IA_MATCH:
                     nuevo_nodo = Nodo("Raiz")
-                    comprobarMovimientosIa(self.board, color=self.turn, nodoActual=nuevo_nodo, game=self)
+                    if (DB_ACTIVE):
+                        respuesta_movimientos(prev_row, prev_col, row, col)
+                    else:
+                        comprobarMovimientosIa(self.board, color=self.turn, nodoActual=nuevo_nodo, game=self)
                     self.turn = PINK
 
         piece = self.board.get_piece(row, col)
@@ -67,7 +74,7 @@ class Game:
             if skipped:
                 self.board.remove(skipped)
             self.change_turn()
-            print(f"cambio de turno {self.turn}")
+            # print(f"cambio de turno {self.turn}")
         else:
             return False
 
@@ -124,5 +131,7 @@ class Game:
         self.win.blit(blue_time, (HEIGHT // 4 * 3 + BOARD_BORDER // 4, 0))
 
     def end_game(self, winner):
-        print(f"¡{winner} ha ganado por tiempo!")
-        pygame.quit()
+        if winner == BLUE:
+            menu_loser()
+        elif winner == PINK:
+            menu_winner()

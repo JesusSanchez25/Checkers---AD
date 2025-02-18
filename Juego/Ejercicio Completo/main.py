@@ -6,6 +6,9 @@ from juego.board import Board
 from juego.constants import WIDTH, BOARD_BORDER, HEIGHT, SQUARE_SIZE, PINK, BLUE
 from juego.game import Game
 from juego.home import iniciarMenu
+from juego.db import cargar_movimientos
+from juego.loser import menu_loser
+from juego.winner import menu_winner
 
 FPS = 60
 
@@ -31,6 +34,7 @@ def get_position_from_mouse(pos):  # la posicion conssiste en (cordenada_x, cord
 
 
 def main():
+    cargar_movimientos()
     run = True
     clock = pygame.time.Clock()
     seleccion = iniciarMenu()
@@ -54,7 +58,10 @@ def main():
         clock.tick(FPS)
 
         if game.winner() is not None:
-            print(game.winner())
+            if game.winner() == PINK:
+                menu_winner()
+            elif game.winner() == BLUE:
+                menu_loser()
             run = False
 
         for event in pygame.event.get():

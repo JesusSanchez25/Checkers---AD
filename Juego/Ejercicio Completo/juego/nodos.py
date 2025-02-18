@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
 	imprimir_arbol(arbol)  # Imprime el árbol completo en forma jerárquica.
 	# Aplica el algoritmo Min-Max y muestra el resultado.
-	print(min_max(arbol, PROFUNDIDAD))
+	# print(min_max(arbol, PROFUNDIDAD))
 
 
 """movimientos_valores = {

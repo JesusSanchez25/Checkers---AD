@@ -25,7 +25,7 @@ def draw_gradient(surface, rect, start_color, end_color):
 class Board:
     def __init__(self):
         self.board = []
-        self.blue_pieces = self.pink_pieces = 12
+        self.blue_pieces = self.pink_pieces = 1
         self.blue_queens = self.pink_queens = 0
         self.create_board()
 

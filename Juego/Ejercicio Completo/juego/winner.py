@@ -1,13 +1,12 @@
 import pygame
 from juego.constants import IA_MATCH, WIDTH, HEIGHT, BOARD_BORDER
-
-def iniciarMenu():
+def menu_winner():
     pygame.init()
 
     screen = pygame.display.set_mode((WIDTH + BOARD_BORDER * 2, HEIGHT + BOARD_BORDER * 2))
     pygame.display.set_caption("Las Damas")
 
-    background = pygame.image.load("assets/assets_menu/fondoInicio.png")
+    background = pygame.image.load("assets/assets_menu/fondoWinner.png")
     background = pygame.transform.scale(background, (WIDTH + BOARD_BORDER * 2, HEIGHT + BOARD_BORDER * 2))
 
     WHITE = (255, 255, 255)
@@ -24,29 +23,17 @@ def iniciarMenu():
     button_width = 250
     button_height = 50
     button_x = (WIDTH - button_width) // 2 + BOARD_BORDER
-    button_y0 = 410
     button_y1 = 480
     button_y2 = 550
 
-    seleccion = None  # Guardará la opción seleccionada
-
     buttons = [
         {
-            "text": "JUGAR CON IA",
-            "rect": pygame.Rect(button_x, button_y0, button_width, button_height),
-            "original_rect": pygame.Rect(button_x, button_y0, button_width, button_height),
-            "border_color": WHITE,
-            "text_color": WHITE,
-            "action": lambda: "ia",
-            "hovered": False
-        },
-        {
-            "text": "JUGAR CON JUGADOR",
+            "text": "VOLVER AL MENÚ",
             "rect": pygame.Rect(button_x, button_y1, button_width, button_height),
             "original_rect": pygame.Rect(button_x, button_y1, button_width, button_height),
             "border_color": WHITE,
             "text_color": WHITE,
-            "action": lambda: "jugador",
+            "action": lambda: print("Modo Jugador seleccionado"),
             "hovered": False
         },
         {
@@ -55,7 +42,7 @@ def iniciarMenu():
             "original_rect": pygame.Rect(button_x, button_y2, button_width, button_height),
             "border_color": RED,
             "text_color": RED,
-            "action": lambda: "salir",
+            "action": lambda: exit(),
             "hovered": False
         }
     ]
@@ -66,17 +53,16 @@ def iniciarMenu():
     while running:
         clock.tick(60)
         screen.blit(background, (0, 0))
+
         mouse_pos = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                seleccion = "salir"
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 for button in buttons:
                     if button["rect"].collidepoint(mouse_pos):
-                        seleccion = button["action"]()
-                        running = False  # Sale del bucle
+                        button["action"]()
 
         for button in buttons:
             if button["rect"].collidepoint(mouse_pos):
@@ -99,6 +85,5 @@ def iniciarMenu():
             screen.blit(text_rendered, (text_x, text_y))
 
         pygame.display.flip()
-    # print(seleccion)
-    return seleccion  # Devuelve la opción elegida
 
+    pygame.quit()

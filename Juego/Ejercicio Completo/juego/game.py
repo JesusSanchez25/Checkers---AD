@@ -31,6 +31,8 @@ class Game:
         self.pink_time = TIME
         self.blue_time = TIME
         self.last_time = time.time()
+        self.dbActive = DB_ACTIVE
+        self.turnNumber = 0
 
     def winner(self):
         return self.board.winner()
@@ -52,9 +54,14 @@ class Game:
                 IA_MATCH= self.ia
                 if self.turn == BLUE and IA_MATCH:
                     nuevo_nodo = Nodo("Raiz")
-                    if (DB_ACTIVE):
-                        respuesta_movimientos(prev_row, prev_col, row, col)
-                    else:
+                    db_move = False
+                    if (self.dbActive):
+                        db_move = respuesta_movimientos(prev_row, prev_col, row, col, self, self.turnNumber)
+                        self.turnNumber += 1
+                        if (not db_move):
+                            self.dbActive = False
+
+                    if (not self.dbActive):
                         comprobarMovimientosIa(self.board, color=self.turn, nodoActual=nuevo_nodo, game=self)
                     self.turn = PINK
 

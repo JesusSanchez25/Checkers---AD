@@ -42,10 +42,11 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
                         fila_original, col_original = pieza.row, pieza.col
 
                         # Clona el tablero para simular el movimiento sin afectar el estado real.
-                        board_copia: Board = copy.deepcopy(board)
+                        board_copia: Board =board
                         pieza_copia = board_copia.get_piece(
                             fila_original, col_original)
 
+                        crowned_original = pieza.queen
                         # Mueve la pieza en el tablero clonado a la nueva posición.
                         board_copia.move(pieza_copia, nuevaRow, nuevaCol)
                         board_copia.remove(capturas)
@@ -67,14 +68,18 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
                             nuevaProfundidad = profundidad - 1
                             nuevoColor = PINK if str(color) == str(BLUE) else BLUE
                             # board_copia.print_board()
-                            comprobarMovimientosIa(board_copia, nuevoColor, nuevaProfundidad, nodoHijo)
+                            comprobarMovimientosIa(board, nuevoColor, nuevaProfundidad, nodoHijo)
                         nodoActual.agregar_hijo(nodoHijo)
 
 
 
                         # --- 6. Restaurar la posición original de la pieza ---
                         # Restaura la posición original de la pieza en el tablero real.
-                        pieza.row, pieza.col = fila_original, col_original
+                        # pieza.row, pieza.col = fila_original, col_original
+                        board.move(pieza, fila_original, col_original)
+                        pieza.queen = crowned_original
+                        board.add(capturas)
+
 
     # --- 7. Imprimir el árbol (solo para el nodo raíz) ---
     # Si es el nodo raíz, imprime el árbol (para depuración).
@@ -208,7 +213,7 @@ def eval_piece_count(piece, board, row, col):
     """
     rows = len(board.board)
     if piece.queen:
-        return 20
+        return 20 + (4 * 8)
     return 10
 
 def evaluate_board(board, player_color):

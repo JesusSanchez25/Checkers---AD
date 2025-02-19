@@ -1,11 +1,21 @@
 from juego.database import jsonletras
 
-def formatear_row(row):
+def formatear_row_to_db(row):
     letras = ["a", "b", "c", "d", "e", "f", "g", "h"]
-    return (letras[row - 1]).upper()
+    return (letras[row]).upper()
 
-def formatear_col(col):
-    return 7 - col
+def formatear_col_to_db(col):
+    """
+    Convierte una columna de 0 a 7 a un numero de 1 a 8.
+    """
+    return 8 - col
+
+def formatear_col_from_db(col):
+    letras = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    return letras.index(col.lower())
+
+def formatear_row_from_db(row):
+    return 8 - int(row)
 
 def cargar_movimientos():
     """
@@ -29,24 +39,30 @@ def cargar_movimientos():
 
         movimientos.append(movimientos_procesados)
 
-    for movimiento in movimientos:
-        print(movimiento, end="\n\n")
     return movimientos
 
-def respuesta_movimientos(row_inicial, col_inicial, row_final, col_final):
-    print(row_inicial, col_inicial, row_final, col_final)
-    row_inicial, row_final = formatear_row(row_inicial), formatear_row(row_final)
-    col_inicial, col_final = formatear_col(col_inicial), formatear_col(col_final)
+def respuesta_movimientos(col_inicial, row_inicial, col_final, row_final, game,  turno=0):
+    row_inicial, row_final = formatear_row_to_db(row_inicial), formatear_row_to_db(row_final)
+    col_inicial, col_final = formatear_col_to_db(col_inicial), formatear_col_to_db(col_final)
+    if (turno >= 2):
+        return False
 
     for entry in jsonletras["movements"]:
         secuencia = entry["secuencia"]
         jugadas = secuencia.split("; ")
-        primer_movimiento = jugadas[0].split("-")[0]
+        primer_movimiento = jugadas[turno].split("-")[0]
         primer_movimiento_ejecutad = f"{row_inicial}{col_inicial}{row_final}{col_final}"
         if (primer_movimiento_ejecutad == primer_movimiento):
-            print("MOVIMIENTO BD", primer_movimiento)
-            print("MOVIMIENTO EJECUTADO", primer_movimiento_ejecutad)
-            print("hola")
+            print("MOVIMIENTO RESPUESTA", jugadas[0].split("-")[1])
+            movimientoRespuesta = ""
+            col = -1
+            for i, posicion in enumerate(jugadas[0].split("-")[1]):
+                if (i % 2 == 0):
+                    col = formatear_col_from_db(posicion)
+                else:
+                    row = formatear_row_from_db(posicion)
+                    game.select(row, col)
+            print(movimientoRespuesta)
             return True
         # for jugada in jugadas:
         #     partida, llegada = jugada.split("-")

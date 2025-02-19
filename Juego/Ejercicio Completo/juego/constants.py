@@ -9,7 +9,7 @@ TIME = 60000
 IA_MATCH = False
 DB_ACTIVE = True
 CAPTURA_OBLIGATORIA = False
-PROFUNDIDAD = 3
+PROFUNDIDAD = 4
 
 pink_piece = pygame.transform.scale(pygame.image.load('assets/piezas/pink_piece.png'), (SQUARE_SIZE, SQUARE_SIZE))
 blue_piece = pygame.transform.scale(pygame.image.load('assets/piezas/blue_piece2.png'), (SQUARE_SIZE, SQUARE_SIZE))

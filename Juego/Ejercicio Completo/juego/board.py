@@ -25,7 +25,7 @@ def draw_gradient(surface, rect, start_color, end_color):
 class Board:
     def __init__(self):
         self.board = []
-        self.blue_pieces = self.pink_pieces = 1
+        self.blue_pieces = self.pink_pieces = 8
         self.blue_queens = self.pink_queens = 0
         self.create_board()
 
@@ -155,6 +155,16 @@ class Board:
                 else:
                     self.blue_pieces -= 1  # Reduce el contador de piezas blancas
 
+    def add(self, pieces):
+        # Elimina las piezas capturadas del tablero
+        for piece in pieces:
+            self.board[piece.row][piece.col] = piece  # Marca la posición como vacía
+            if piece != 0:
+                if piece.color == PINK:
+                    self.pink_pieces += 1  # Reduce el contador de piezas rojas
+                else:
+                    self.blue_pieces += 1  # Reduce el contador de piezas blancas
+                    
     def winner(self):
         # Determina si hay un ganador basado en el número de piezas restantes
         if self.pink_pieces <= 0:

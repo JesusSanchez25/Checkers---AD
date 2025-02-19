@@ -22,12 +22,10 @@ def get_position_from_mouse(pos):  # la posicion conssiste en (cordenada_x, cord
     col = (x - BOARD_BORDER) // SQUARE_SIZE
 
     if row > 7:
-        print("row fuera del tablero")
         row = -1
 
 
     if col > 7:
-        print("col fuera del tablero")
         col = -1
 
     return row, col
@@ -40,7 +38,6 @@ def main():
     seleccion = iniciarMenu()
 
     if seleccion == "salir":
-        print("saliendo desde el menu")
         pygame.quit()
         return
 
@@ -49,8 +46,6 @@ def main():
 
     if seleccion == "jugador":
         ia = False
-
-
 
     game = Game(WIN, ia)
 
@@ -71,7 +66,6 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 row, col = get_position_from_mouse(pos)
-                print(row, col)
                 if  row >= 0 and  col >= 0:
                     game.select(row, col)
                 else: print("Has seleccionado el borde del tablero")

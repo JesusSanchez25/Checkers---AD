@@ -28,62 +28,45 @@ def tiene_capturas(nodo):
 def min_max(nodoActual, profundidad, maximo: bool = True):
     global CAPTURA_OBLIGATORIA
 
-    # Caso base: si es un nodo hoja o la profundidad llegó a 0
     if len(nodoActual.hijos) == 0 or profundidad == 0:
         return nodoActual
 
-    # Para almacenar el mejor hijo según la evaluación
     mejor_hijo = None
 
     if maximo:
         mejor_puntuacion = float('-inf')
         for hijo in nodoActual.hijos:
-            # Obtenemos la evaluación del subárbol
             nodo_evaluado = min_max(hijo, profundidad - 1, False)
-
-            # Actualizamos la puntuación del hijo actual (importante para propagar valores)
             hijo.puntuacion = nodo_evaluado.puntuacion
-
-            # Actualizamos el mejor hijo si encontramos uno mejor
             if hijo.puntuacion > mejor_puntuacion:
                 mejor_puntuacion = hijo.puntuacion
                 mejor_hijo = hijo
 
-        # Manejo de capturas obligatorias
         if CAPTURA_OBLIGATORIA:
             capturas = [hijo for hijo in nodoActual.hijos if tiene_capturas(hijo)]
             if capturas:
                 mejor_hijo = max(capturas, key=lambda item: item.puntuacion)
+                mejor_puntuacion = mejor_hijo.puntuacion
 
-        # Actualizamos la puntuación del nodo actual
         nodoActual.puntuacion = mejor_puntuacion
-
-        # Si estamos en la raíz, devolvemos el mejor hijo (primer movimiento)
         if nodoActual.valor == "Raiz":
             return mejor_hijo
     else:
         mejor_puntuacion = float('inf')
         for hijo in nodoActual.hijos:
             nodo_evaluado = min_max(hijo, profundidad - 1, True)
-
-            # Actualizamos la puntuación del hijo actual
             hijo.puntuacion = nodo_evaluado.puntuacion
-
-            # Actualizamos el mejor hijo si encontramos uno mejor
             if hijo.puntuacion < mejor_puntuacion:
                 mejor_puntuacion = hijo.puntuacion
                 mejor_hijo = hijo
 
-        # Manejo de capturas obligatorias
         if CAPTURA_OBLIGATORIA:
             capturas = [hijo for hijo in nodoActual.hijos if tiene_capturas(hijo)]
             if capturas:
                 mejor_hijo = min(capturas, key=lambda item: item.puntuacion)
+                mejor_puntuacion = mejor_hijo.puntuacion
 
-        # Actualizamos la puntuación del nodo actual
         nodoActual.puntuacion = mejor_puntuacion
-
-    # Caso importante: siempre devolvemos el nodoActual excepto en la raíz
     return nodoActual
 
 # Función para imprimir el árbol de manera jerárquica.

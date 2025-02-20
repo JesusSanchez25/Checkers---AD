@@ -102,8 +102,6 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
         arbol_json = arbol_json.replace("'", '"')
         pyperclip.copy(arbol_json)
 
-
-
 def eval_capture_options(piece, board):
     """
     Evalúa si la pieza tiene opciones de captura.

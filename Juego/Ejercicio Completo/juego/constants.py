@@ -7,8 +7,8 @@ BOARD_BORDER = 50
 TIME = 60000
 
 IA_MATCH = False
-DB_ACTIVE = True
-CAPTURA_OBLIGATORIA = False
+DB_ACTIVE = False
+CAPTURA_OBLIGATORIA = True
 PROFUNDIDAD = 4
 
 pink_piece = pygame.transform.scale(pygame.image.load('assets/piezas/pink_piece.png'), (SQUARE_SIZE, SQUARE_SIZE))

@@ -6,13 +6,13 @@ import pyperclip
 import torch
 
 def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoActual=Nodo("Raiz"), game = None):
-    hay_capturas = False
-    if (CAPTURA_OBLIGATORIA):
-        hay_capturas = any(
-            any(capturas for _, capturas in board.get_valid_moves(pieza).items())
-            for fila in board.board for pieza in fila
-            if str(pieza) == str(color)
-        )
+    # hay_capturas = False
+    # if (CAPTURA_OBLIGATORIA):
+    #     hay_capturas = any(
+    #         any(capturas for _, capturas in board.get_valid_moves(pieza).items())
+    #         for fila in board.board for pieza in fila
+    #         if str(pieza) == str(color)
+    #     )
 
     # --- 1. Recorrer el tablero ---
     # Itera sobre cada fila y columna del tablero para encontrar piezas del color de la IA.
@@ -22,9 +22,9 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
                 # Obtiene los movimientos válidos para la pieza actual.
                 moves = board.get_valid_moves(pieza)
 
-                if (hay_capturas and CAPTURA_OBLIGATORIA):
-                    moves = {m: c for m, c in moves.items() if c}
-                    if not moves: continue
+                # if (hay_capturas and CAPTURA_OBLIGATORIA):
+                #     moves = {m: c for m, c in moves.items() if c}
+                #     if not moves: continue
 
                 # Si hay movimientos válidos, procesa cada uno.
                 if len(moves) > 0:
@@ -85,7 +85,7 @@ def comprobarMovimientosIa(board: Board, color, profundidad=PROFUNDIDAD, nodoAct
     # Si es el nodo raíz, imprime el árbol (para depuración).
     if nodoActual.valor == "Raiz":
         siguienteMove = min_max(nodoActual, profundidad + 1)
-
+        print("MOVE FINAL", siguienteMove.valor)
         if (siguienteMove.valor == "Raiz"):
             return
         move_origen, move_destino, capturas = siguienteMove.valor.split("-")
